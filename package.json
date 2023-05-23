@@ -1,0 +1,39 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run react:dev\" \"npm run electron:dev\"",
+    "react:dev": "next dev",
+    "react:build": "next build",
+    "react:start": "next start",
+    "react:lint": "next lint",
+    "electron:dev": "nodemon",
+    "electron:build": "tsc -p electron",
+    "electron:start": "npm run electron:build && electron ./dist/main.js"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
+    "@types/node": "20.2.1",
+    "@types/react": "18.2.6",
+    "@types/react-dom": "18.2.4",
+    "autoprefixer": "10.4.14",
+    "concurrently": "^8.0.1",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.3",
+    "electron": "^24.3.1",
+    "electron-reload": "^2.0.0-alpha.1",
+    "eslint": "8.40.0",
+    "eslint-config-next": "13.4.2",
+    "eslint-config-react-app": "^7.0.1",
+    "next": "13.4.2",
+    "nodemon": "^2.0.22",
+    "postcss": "8.4.23",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-query": "^3.39.3",
+    "react-redux": "^8.0.5",
+    "sass": "^1.62.1",
+    "typescript": "5.0.4"
+  }
+}

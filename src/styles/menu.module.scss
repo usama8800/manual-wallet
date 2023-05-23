@@ -1,0 +1,11 @@
+.menu {
+  background-color: rgb(var(--background-2-rgb));
+  max-width: 200px;
+  min-width: 150px;
+}
+
+.menuItem {
+  display: block;
+  text-decoration: none;
+  color: rgb(var(--foreground-2-rgb));
+}

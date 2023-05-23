@@ -1,10 +1,10 @@
-import { fetchAmounts } from "@/lib/slices/wallets";
-import store from "@/lib/store";
-import { mainLayout } from "@/lib/utils";
-import "@/styles/globals.scss";
-import type { AppProps } from "next/app";
-import { ReactElement, ReactNode, useEffect, useState } from "react";
-import { Provider } from "react-redux";
+import { fetchAmounts } from '@/lib/slices/wallets';
+import store from '@/lib/store';
+import { mainLayout } from '@/lib/utils';
+import '@/styles/globals.scss';
+import type { AppProps } from 'next/app';
+import { ReactElement, ReactNode, useEffect, useState } from 'react';
+import { Provider } from 'react-redux';
 
 export type NextPageWithLayout = ReactElement & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -22,7 +22,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const wallets = state.wallets.wallets;
   const walletsStatus = state.wallets.status;
   useEffect(() => {
-    if (loading || walletsStatus !== "idle") return;
+    if (loading || walletsStatus !== 'idle') return;
     setLoading(true);
     store.dispatch(fetchAmounts(wallets));
     setLoading(false);
@@ -30,20 +30,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <Provider store={store}>
-      <Root>{getLayout(<Component {...pageProps} />)}</Root>
+      {getLayout(<Component {...pageProps} />)}
     </Provider>
   );
-}
-
-function Root(props: any) {
-  // const wallets = useAppSelector(selectWallets);
-  // const walletsStatus = useAppSelector(selectStatus);
-  // const dispatch = useAppDispatch();
-
-  // useEffect(() => {
-  //   if (walletsStatus === "idle") {
-  //     dispatch(fetchAmounts(wallets));
-  //   }
-  // }, [dispatch, wallets, walletsStatus]);
-  return <>{props.children}</>;
 }

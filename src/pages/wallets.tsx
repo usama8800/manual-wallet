@@ -1,7 +1,7 @@
-import Button from "@/components/button";
-import { useAppSelector } from "@/lib/hooks";
-import { Wallet, selectStatus, selectWallets } from "@/lib/slices/wallets";
-import styles from "@/styles/wallets.module.scss";
+import Button from '@/components/button';
+import { useAppSelector } from '@/lib/hooks';
+import { Wallet, selectStatus, selectWallets } from '@/lib/slices/wallets';
+import styles from '@/styles/wallets.module.scss';
 
 export default function Wallets() {
   const wallets = useAppSelector(selectWallets);
@@ -29,9 +29,9 @@ function WalletItem(props: { wallet: Wallet }) {
     <div className={styles.wallet}>
       <div>{props.wallet.network.name}</div>
       <div>{props.wallet.name}</div>
-      {walletsStatus === "loading" ? (
-        <>...</>
-      ) : (
+      {walletsStatus === 'loading' ? (
+        '...'
+      ) : walletsStatus === 'failed' ? 'erwror' : (
         <div>{props.wallet.amountCoins}</div>
       )}
     </div>

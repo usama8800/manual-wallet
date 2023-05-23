@@ -10,7 +10,8 @@
     "react:lint": "next lint",
     "electron:dev": "nodemon",
     "electron:build": "tsc -p electron",
-    "electron:start": "npm run electron:build && electron ./dist/main.js"
+    "electron:start": "npm run electron:build && electron ./dist/main.js",
+    "lint": "npx eslint ./src ./electron --fix"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
@@ -26,12 +27,13 @@
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
     "eslint-config-react-app": "^7.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
     "next": "13.4.2",
     "nodemon": "^2.0.22",
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-query": "^3.39.3",
     "react-redux": "^8.0.5",
     "sass": "^1.62.1",
     "typescript": "5.0.4"

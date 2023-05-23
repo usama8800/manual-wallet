@@ -1,5 +1,5 @@
-import styles from "@/styles/menu.module.scss";
-import Link from "next/link";
+import styles from '@/styles/menu.module.scss';
+import Link from 'next/link';
 
 export default function Menu() {
   return (
@@ -20,10 +20,11 @@ export default function Menu() {
 
 function MenuItem(props: { children: string; link?: string }) {
   let link = props.link;
-  if (!link) link = "/" + props.children.toLowerCase();
-  if (!link.startsWith("/")) link = "/" + link;
+  if (!link) link = '/' + props.children.toLowerCase();
+  if (!link.startsWith('/')) link = '/' + link;
   return (
-    <Link className={styles.menuItem} href={link}>
+    <Link className={styles.menuItem}
+      href={link}>
       {props.children}
     </Link>
   );

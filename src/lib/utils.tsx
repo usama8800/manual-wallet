@@ -1,6 +1,6 @@
-import Menu from "@/components/mainMenu";
-import styles from "@/styles/layouts.module.scss";
-import { ReactElement } from "react";
+import Menu from '@/components/mainMenu';
+import styles from '@/styles/layouts.module.scss';
+import { ReactElement } from 'react';
 
 export function mainLayout(page: ReactElement) {
   return (

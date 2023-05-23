@@ -1,5 +1,5 @@
-import { configureStore } from "@reduxjs/toolkit";
-import wallets, { fetchAmounts } from "./slices/wallets";
+import { configureStore } from '@reduxjs/toolkit';
+import wallets, { fetchAmounts } from './slices/wallets';
 
 const store = configureStore({
   reducer: {

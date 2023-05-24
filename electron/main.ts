@@ -4,20 +4,11 @@ import * as path from 'path';
 import * as url from 'url';
 
 dotenv.config();
-if (process.env.MODE === 'dev') {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  require('electron-reload')(path.resolve(__dirname, '..'), {
-    electron: path.join(__dirname, '..', 'node_modules', '.bin', 'electron'),
-    hardResetMethod: 'exit',
+app.setPath('userData', path.join(__dirname, 'storage'));
 
-  });
-}
 let mainWindow: Electron.BrowserWindow | null;
-
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
     webPreferences: {
       nodeIntegration: true,
       preload: path.join(__dirname, 'preload.js'),

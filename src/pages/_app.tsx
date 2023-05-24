@@ -1,6 +1,6 @@
+import { mainLayout } from '@/components/utils';
 import { fetchAmounts } from '@/lib/slices/wallets';
 import store from '@/lib/store';
-import { mainLayout } from '@/lib/utils';
 import '@/styles/globals.scss';
 import type { AppProps } from 'next/app';
 import { ReactElement, ReactNode, useEffect, useState } from 'react';
@@ -24,9 +24,9 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
     if (loading || walletsStatus !== 'idle') return;
     setLoading(true);
-    store.dispatch(fetchAmounts(wallets));
+    store.dispatch(fetchAmounts({ wallets, api: state.config.balanceApi }));
     setLoading(false);
-  }, [loading, wallets, walletsStatus]);
+  }, [loading, state.config.balanceApi, wallets, walletsStatus]);
 
   return (
     <Provider store={store}>

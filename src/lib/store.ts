@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import wallets, { fetchAmounts } from './slices/wallets';
+import config from './slices/config';
+import wallets from './slices/wallets';
 
 const store = configureStore({
   reducer: {
     wallets,
+    config,
   },
 });
 
@@ -11,5 +13,3 @@ const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export default store;
-
-store.dispatch(fetchAmounts(store.getState().wallets.wallets));

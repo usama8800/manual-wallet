@@ -1,48 +1,45 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { EntityState, PayloadAction, createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { balance } from '../blockchain';
+import { SliceStatus } from '../utils';
+import { BalanceApi } from './config';
+import { Network } from './networks';
 
 export interface Wallet {
-  network: {
-    name: string,
-    symbol: string,
-  },
+  network: Network,
   name: string,
   address: string,
   amountCoins: number,
-}
-export interface WalletsState {
-  status: 'idle' | 'loading' | 'failed' | 'succeeded';
+  status: SliceStatus;
   error: any;
-  wallets: Wallet[];
 }
 
-const initialState: WalletsState = {
-  status: 'idle',
-  error: null,
-  wallets: [
-    {
-      network: {
-        name: 'Ethereum',
-        symbol: 'eth',
-      },
-      name: 'MetaMask',
-      address: '0x8624613061799e9472e4e4579e88afa39d8887ab',
-      amountCoins: 0,
-    },
-    {
-      network: {
-        name: 'Bitcoin',
-        symbol: 'btc',
-      },
-      name: 'Electrum',
-      address: '186zeVrx7hXe9iiXk9oS48cSKe4QPwXMgm',
-      amountCoins: 0,
-    },
-  ],
-};
+// const initialState: WalletsState = {
+//   status: 'idle',
+//   error: null,
+//   wallets: [
+//     {
+//       network: new Network('eth'),
+//       name: 'MetaMask',
+//       address: '0x8624613061799e9472e4e4579e88afa39d8887ab',
+//       amountCoins: 0,
+//     },
+//     {
+//       network: new Network('btc'),
+//       name: 'Electrum',
+//       address: '186zeVrx7hXe9iiXk9oS48cSKe4QPwXMgm',
+//       amountCoins: 0,
+//     },
+//   ],
+// };
 
-export const counterSlice = createSlice({
-  name: 'wallet',
+const walletsAdapter = createEntityAdapter<Wallet>({
+  sortComparer: (a, b) => b.address.localeCompare(a.address)
+});
+const initialState = walletsAdapter.getInitialState();
+
+
+export const walletsSlice = createSlice({
+  name: 'wallets',
   initialState,
   reducers: {
     incrementByAmount: (state, action: PayloadAction<number>) => {
@@ -51,29 +48,28 @@ export const counterSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(fetchAmounts.pending, (state, action) => {
-        state.status = 'loading';
+      .addCase(fetchAmount.pending, (state, action) => {
+        state.entities[action.meta.arg.wallet.address]!.status = 'pending';
       })
-      .addCase(fetchAmounts.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.wallets.forEach((wallet, index) => {
-          wallet.amountCoins = action.payload[index];
-        });
+      .addCase(fetchAmount.fulfilled, (state, action) => {
+        state.entities[action.meta.arg.wallet.address]!.status = 'fulfilled';
+        state.entities[action.meta.arg.wallet.address]!.amountCoins = action.payload;
       })
-      .addCase(fetchAmounts.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
+      .addCase(fetchAmount.rejected, (state, action) => {
+        state.entities[action.meta.arg.wallet.address]!.status = 'rejected';
+        state.entities[action.meta.arg.wallet.address]!.error = action.error.message;
       });
   }
 });
 
-export const fetchAmounts = createAsyncThunk('wallets/fetchAmounts', async (wallets: Wallet[]) => {
-  const balances = await Promise.all(wallets.map((w) => balance(w.network.symbol, w.address)));
-  return balances;
+export const fetchAmount = createAsyncThunk('wallets/fetchAmount', async (data: { api: BalanceApi, wallet: Wallet }) => {
+  const b = await balance(data.api, data.wallet.network, data.wallet.address);
+  return b;
 });
 
 // Action creators are generated for each case reducer function
-// export const { } = counterSlice.actions;
-export default counterSlice.reducer;
-export const selectWallets = (state: { wallets: WalletsState }) => state.wallets.wallets;
-export const selectStatus = (state: { wallets: WalletsState }) => state.wallets.status;
+// export const { } = walletsSlice.actions;
+export default walletsSlice.reducer;
+export const selectAllWallets = (state: EntityState<Wallet>) => walletsAdapter.getSelectors().selectAll(state);
+export const selectWallet = (wallet: Wallet) =>
+  (state: EntityState<Wallet>) => walletsAdapter.getSelectors().selectById(state, wallet.address);

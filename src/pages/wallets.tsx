@@ -31,7 +31,7 @@ function WalletItem(props: { wallet: Wallet }) {
       <div>{props.wallet.name}</div>
       {walletsStatus === 'loading' ? (
         '...'
-      ) : walletsStatus === 'failed' ? 'erwror' : (
+      ) : walletsStatus === 'failed' ? 'error' : (
         <div>{props.wallet.amountCoins}</div>
       )}
     </div>

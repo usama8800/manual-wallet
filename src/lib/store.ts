@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import config from './slices/config';
+import networks from './slices/networks';
 import wallets from './slices/wallets';
 
 const store = configureStore({
   reducer: {
+    networks,
     wallets,
     config,
   },

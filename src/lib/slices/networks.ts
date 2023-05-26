@@ -1,37 +1,34 @@
-import { EntityState, createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { EntityState, PayloadAction, createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { price } from '../blockchain';
 import { SliceStatus } from '../utils';
 import { PriceApi } from './config';
 
-export class Network {
+export interface Network {
   status: SliceStatus;
   error: any;
   symbol: string;
   price: number;
-
-  constructor(symbol: string) {
-    this.symbol = symbol;
-    this.status = 'idle';
-    this.error = null;
-    this.price = 0;
-  }
 }
-export interface NetworksState {
-  networks: Network[];
-}
+export const defaultNetwork = {
+  price: 0,
+  error: null as any,
+  status: 'idle' as SliceStatus,
+};
 
 const networksAdapter = createEntityAdapter<Network>({
-  sortComparer: (a, b) => b.symbol.localeCompare(a.symbol)
+  sortComparer: (a, b) => b.symbol.localeCompare(a.symbol),
+  selectId: (network) => network.symbol,
 });
-
-
-const initialSymbols = ['btc', 'eth'];
 const initialState = networksAdapter.getInitialState();
 
 export const networksSlice = createSlice({
   name: 'networks',
   initialState,
-  reducers: {},
+  reducers: {
+    setNetworks: (state, action: PayloadAction<Network[]>) => {
+      networksAdapter.setAll(state, action.payload);
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchPrice.pending, (state, action) => {
@@ -48,17 +45,15 @@ export const networksSlice = createSlice({
   }
 });
 
-networksAdapter.addMany(initialState, initialSymbols.map(symbol => new Network(symbol)));
-
 export const fetchPrice = createAsyncThunk('networks/fetchPrice', async (data: { api: PriceApi, network: Network }) => {
-  const p = await price(data.api, data.network);
+  const p = await price(data.api, data.network.symbol);
   return p;
 });
 
 // Action creators are generated for each case reducer function
-// export const { } = networksSlice.actions;
+export const { setNetworks } = networksSlice.actions;
 export default networksSlice.reducer;
 
-export const selectAllNetworks = (state: EntityState<Network>) => networksAdapter.getSelectors().selectAll(state);
-export const selectNetwork = (network: Network) =>
-  (state: EntityState<Network>) => networksAdapter.getSelectors().selectById(state, network.symbol);
+export const selectAllNetworks = (state: { networks: EntityState<Network> }) => networksAdapter.getSelectors().selectAll(state.networks);
+export const selectNetwork = (symbol: string) =>
+  (state: { networks: EntityState<Network> }) => networksAdapter.getSelectors().selectById(state.networks, symbol);

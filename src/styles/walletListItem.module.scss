@@ -1,0 +1,15 @@
+.walletListItem {
+  >* {
+    flex: 1;
+  }
+
+  >.small {
+    flex: 0;
+  }
+
+  .networkContainer {
+    display: flex;
+    flex-direction: row;
+  }
+
+}

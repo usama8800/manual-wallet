@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export type BalanceApi = 'blockcypher';
-export type PriceApi = 'blockcypher';
+export type PriceApi = 'coingecko';
 
 export interface ConfigState {
   balanceApi: BalanceApi;
@@ -10,7 +10,7 @@ export interface ConfigState {
 
 const initialState: ConfigState = {
   balanceApi: 'blockcypher',
-  priceApi: 'blockcypher',
+  priceApi: 'coingecko',
 };
 
 export const configSlice = createSlice({

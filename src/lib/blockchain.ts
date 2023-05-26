@@ -1,15 +1,15 @@
-import * as blockCypher from './slices/blockcypher';
+import * as blockcypher from './slices/blockcypher';
+import * as coingecko from './slices/coingecko';
 import { BalanceApi, PriceApi } from './slices/config';
-import { Network } from './slices/networks';
 
-export async function balance(api: BalanceApi, network: Network, address: string): Promise<number> {
+export async function balance(api: BalanceApi, networkSymbol: string, address: string): Promise<number> {
   switch (api) {
-    case 'blockcypher': return blockCypher.balance(network.symbol, address);
+    case 'blockcypher': return blockcypher.balance(networkSymbol, address);
   }
 }
 
-export async function price(api: PriceApi, network: Network): Promise<number> {
+export async function price(api: PriceApi, networkSymbol: string): Promise<number> {
   switch (api) {
-    case 'blockcypher': return blockCypher.price(network.symbol);
+    case 'coingecko': return coingecko.price(networkSymbol);
   }
 }

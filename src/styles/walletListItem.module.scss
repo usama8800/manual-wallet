@@ -1,10 +1,6 @@
 .walletListItem {
-  >* {
+  &>*:not(.small) {
     flex: 1;
-  }
-
-  >.small {
-    flex: 0;
   }
 
   .networkContainer {

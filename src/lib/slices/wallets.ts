@@ -1,13 +1,10 @@
+import { Wallet } from '@prisma/client';
 import { EntityState, PayloadAction, createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { balance } from '../blockchain';
 import { SliceStatus } from '../utils';
 import { BalanceApi } from './config';
 
-export interface Wallet {
-  id: number;
-  networkSymbol: string;
-  name: string;
-  address: string;
+export interface WalletState extends Wallet {
   amountCoins: number;
   status: SliceStatus;
   error: any;
@@ -18,16 +15,19 @@ export const defaultWallet = {
   status: 'idle' as SliceStatus,
 };
 
-const walletsAdapter = createEntityAdapter<Wallet>({
+const walletsAdapter = createEntityAdapter<WalletState>({
   sortComparer: (a, b) => b.address.localeCompare(a.address),
 });
-const initialState = walletsAdapter.getInitialState();
+const initialState = walletsAdapter.getInitialState({
+  error: null as any,
+  status: 'idle' as SliceStatus,
+});
 
 export const walletsSlice = createSlice({
   name: 'wallets',
   initialState,
   reducers: {
-    setWallets: (state, action: PayloadAction<Wallet[]>) => {
+    setWallets: (state, action: PayloadAction<WalletState[]>) => {
       walletsAdapter.setAll(state, action.payload);
     },
   },
@@ -43,11 +43,29 @@ export const walletsSlice = createSlice({
       .addCase(fetchAmount.rejected, (state, action) => {
         state.entities[action.meta.arg.wallet.id]!.status = 'rejected';
         state.entities[action.meta.arg.wallet.id]!.error = action.error.message;
+      })
+      .addCase(fetchAllWallets.pending, (state, _) => {
+        state.status = 'pending';
+      })
+      .addCase(fetchAllWallets.fulfilled, (state, action) => {
+        walletsAdapter.setAll(state, action.payload.map((wallet) => ({
+          ...defaultWallet,
+          ...wallet,
+        })));
+        state.status = 'fulfilled';
+      })
+      .addCase(fetchAllWallets.rejected, (state, action) => {
+        state.status = 'pending';
+        state.error = action.error.message;
       });
   }
 });
 
-export const fetchAmount = createAsyncThunk('wallets/fetchAmount', async (data: { api: BalanceApi, wallet: Wallet }) => {
+export const fetchAllWallets = createAsyncThunk('wallets/fetchAll', async () => {
+  const wallets = await window.electron.getWallets();
+  return wallets;
+});
+export const fetchAmount = createAsyncThunk('wallets/fetchAmount', async (data: { api: BalanceApi, wallet: WalletState }) => {
   const b = await balance(data.api, data.wallet.networkSymbol, data.wallet.address);
   return b;
 });
@@ -55,6 +73,9 @@ export const fetchAmount = createAsyncThunk('wallets/fetchAmount', async (data: 
 // Action creators are generated for each case reducer function
 export const { setWallets } = walletsSlice.actions;
 export default walletsSlice.reducer;
-export const selectAllWallets = (state: { wallets: EntityState<Wallet> }) => walletsAdapter.getSelectors().selectAll(state.wallets);
+export const selectInactiveWallets = (state: { wallets: EntityState<WalletState> }) =>
+  walletsAdapter.getSelectors().selectAll(state.wallets).filter((wallet) => wallet.deleted);
+export const selectActiveWallets = (state: { wallets: EntityState<WalletState> }) =>
+  walletsAdapter.getSelectors().selectAll(state.wallets).filter((wallet) => !wallet.deleted);
 export const selectWallet = (id: number) =>
-  (state: { wallets: EntityState<Wallet> }) => walletsAdapter.getSelectors().selectById(state.wallets, id);
+  (state: { wallets: EntityState<WalletState> }) => walletsAdapter.getSelectors().selectById(state.wallets, id);

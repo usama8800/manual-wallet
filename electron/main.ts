@@ -1,7 +1,9 @@
+import { PrismaClient, Wallet } from '@prisma/client';
 import * as dotenv from 'dotenv';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow, app, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import { getRandomWallet } from './crypto';
 
 dotenv.config();
 app.setPath('userData', path.join(__dirname, 'storage'));
@@ -15,12 +17,26 @@ function createWindow() {
     },
     title: 'Manual Wallet',
     show: false,
+    autoHideMenuBar: true,
   });
   mainWindow.maximize();
   mainWindow.show();
+  const prisma = new PrismaClient();
 
-  ipcMain.handle('ping', async () => {
-    return 'pong';
+  ipcMain.handle('generateWallet', (_, symbol: string) => {
+    return getRandomWallet(symbol);
+  });
+  ipcMain.handle('addWallet', async (_, wallet: Wallet) => {
+    return await prisma.wallet.create({ data: wallet });
+  });
+  ipcMain.handle('updateWallet', async (_, id: number, data: any) => {
+    return await prisma.wallet.update({ data, where: { id } });
+  });
+  ipcMain.handle('getNetworks', async () => {
+    return await prisma.network.findMany();
+  });
+  ipcMain.handle('getWallets', async () => {
+    return await prisma.wallet.findMany();
   });
 
   if (process.env.MODE === 'dev') {
@@ -37,6 +53,7 @@ function createWindow() {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+    prisma.$disconnect();
   });
 }
 

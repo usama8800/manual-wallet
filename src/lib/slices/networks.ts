@@ -7,6 +7,7 @@ export interface Network {
   status: SliceStatus;
   error: any;
   symbol: string;
+  name: string;
   price: number;
 }
 export const defaultNetwork = {
@@ -19,7 +20,10 @@ const networksAdapter = createEntityAdapter<Network>({
   sortComparer: (a, b) => b.symbol.localeCompare(a.symbol),
   selectId: (network) => network.symbol,
 });
-const initialState = networksAdapter.getInitialState();
+const initialState = networksAdapter.getInitialState({
+  error: null as any,
+  status: 'idle' as SliceStatus,
+});
 
 export const networksSlice = createSlice({
   name: 'networks',
@@ -41,10 +45,28 @@ export const networksSlice = createSlice({
       .addCase(fetchPrice.rejected, (state, action) => {
         state.entities[action.meta.arg.network.symbol]!.status = 'rejected';
         state.entities[action.meta.arg.network.symbol]!.error = action.error.message;
+      })
+      .addCase(fetchAllNetworks.pending, (state, _) => {
+        state.status = 'pending';
+      })
+      .addCase(fetchAllNetworks.fulfilled, (state, action) => {
+        networksAdapter.setAll(state, action.payload.map((network) => ({
+          ...defaultNetwork,
+          ...network
+        })));
+        state.status = 'fulfilled';
+      })
+      .addCase(fetchAllNetworks.rejected, (state, action) => {
+        state.status = 'pending';
+        state.error = action.error.message;
       });
   }
 });
 
+export const fetchAllNetworks = createAsyncThunk('networks/fetchAll', async () => {
+  const networks = await window.electron.getNetworks();
+  return networks;
+});
 export const fetchPrice = createAsyncThunk('networks/fetchPrice', async (data: { api: PriceApi, network: Network }) => {
   const p = await price(data.api, data.network.symbol);
   return p;

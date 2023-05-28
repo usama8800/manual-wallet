@@ -8,12 +8,6 @@ export default function Menu() {
       <MenuItem>Portfolio</MenuItem>
       <MenuItem>Market</MenuItem>
       <MenuItem>Wallets</MenuItem>
-      <MenuItem>Discover</MenuItem>
-      <MenuItem>Send</MenuItem>
-      <MenuItem>Receive</MenuItem>
-      <MenuItem link="buysell">Buy / Sell</MenuItem>
-      <MenuItem>Swap</MenuItem>
-      <MenuItem>Card</MenuItem>
     </div>
   );
 }

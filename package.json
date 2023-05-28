@@ -15,6 +15,7 @@
     "qwe": "nodemon --config nodemon.random.json"
   },
   "dependencies": {
+    "@prisma/client": "^4.14.1",
     "@reduxjs/toolkit": "^1.9.5",
     "@typescript-eslint/eslint-plugin": "^5.46.1",
     "@typescript-eslint/parser": "^5.46.1",
@@ -50,6 +51,7 @@
     "@types/randombytes": "^2.0.0",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
-    "@types/secp256k1": "^4.0.3"
+    "@types/secp256k1": "^4.0.3",
+    "prisma": "^4.14.1"
   }
 }

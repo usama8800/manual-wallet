@@ -25,3 +25,31 @@ html,
   box-sizing: border-box;
   position: relative;
 }
+
+svg {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  &>div {
+    flex: 1;
+  }
+
+  &>div:not(:last-child) {
+    margin-right: 1rem;
+  }
+}
+
+.icon {
+  color: rgb(var(--foreground-2-rgb));
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(var(--foreground-rgb));
+  }
+}

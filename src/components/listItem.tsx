@@ -1,6 +1,7 @@
 import { classNames } from '@/lib/utils';
 import styles from '@/styles/listItem.module.scss';
-import { CSSProperties } from 'react';
+import { useRouter } from 'next/router';
+import { CSSProperties, MouseEvent } from 'react';
 
 export default function ListItem(props: {
   children: any,
@@ -8,7 +9,15 @@ export default function ListItem(props: {
   compact?: boolean,
   style?: CSSProperties,
   className?: string,
+  link?: string,
+  onClick?: (event: MouseEvent<HTMLDivElement, any>) => void,
 }) {
+  const router = useRouter();
+  const onClick = (e: MouseEvent<HTMLDivElement, any>) => {
+    if (props.link) router.replace(props.link);
+    if (props.onClick) props.onClick(e);
+  };
+
   return (
     <div
       className={classNames([styles.listItem, props.className], {
@@ -16,6 +25,7 @@ export default function ListItem(props: {
         [styles.hoverable]: props.hoverable,
       })}
       style={props.style}
+      onClick={onClick}
     >
       {props.children}
     </div>

@@ -1,9 +1,7 @@
-import { Keccak, KeccakAlgorithm } from 'keccak';
-import * as randomBytes from 'randombytes';
+import { Keccak, KeccakAlgorithm, default as createKeccakHash } from 'keccak';
+import randomBytes from 'randombytes';
 import * as secp256k1 from 'secp256k1';
 import { TransformOptions } from 'stream';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-import createKeccakHash = require('keccak');
 
 const keccak: (algorithm: KeccakAlgorithm, options?: TransformOptions) => Keccak = createKeccakHash as any;
 

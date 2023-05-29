@@ -7,6 +7,10 @@ const nextConfig = {
   sassOptions: {
     includePaths: [path.join(__dirname, 'src', 'styles')],
   },
+  images: {
+    unoptimized: true,
+  },
+  output: 'export',
 };
 
 module.exports = nextConfig;

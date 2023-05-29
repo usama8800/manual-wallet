@@ -9,6 +9,7 @@ declare global {
       updateWallet: (id: number, data: any) => Promise<Wallet>,
       getNetworks: () => Promise<Network[]>,
       getWallets: () => Promise<Wallet[]>,
+      back: () => Promise<void>,
     },
   }
 }
@@ -21,4 +22,5 @@ contextBridge.exposeInMainWorld('electron', {
   updateWallet: (id: number, data: any) => ipcRenderer.invoke('updateWallet', id, data),
   getNetworks: () => ipcRenderer.invoke('getNetworks'),
   getWallets: () => ipcRenderer.invoke('getWallets'),
+  back: () => ipcRenderer.invoke('back'),
 });

@@ -38,17 +38,22 @@ function createWindow() {
   ipcMain.handle('getWallets', async () => {
     return await prisma.wallet.findMany();
   });
+  ipcMain.handle('back', () => {
+    mainWindow?.webContents.goBack();
+  });
 
+  console.log(process.env.MODE);
   if (process.env.MODE === 'dev') {
     mainWindow.loadURL('http://localhost:3000');
   } else {
     mainWindow.loadURL(
       url.format({
-        pathname: path.join(__dirname, '../index.html'),
+        pathname: path.join(__dirname, '..', 'out', '/index.html'),
         protocol: 'file:',
         slashes: true
       })
     );
+    mainWindow.loadURL('http://localhost:3000');
   }
 
   mainWindow.on('closed', () => {

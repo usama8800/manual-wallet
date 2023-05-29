@@ -43,7 +43,7 @@ export default function Wallet() {
   return (
     <>
       <div>
-        <Header>
+        <Header back='/wallets'>
           <WalletINN wallet={wallet} name={name} setName={updateName}></WalletINN>
         </Header>
 

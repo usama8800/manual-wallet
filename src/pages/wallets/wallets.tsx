@@ -39,25 +39,28 @@ export default function Wallets() {
   return (
     <div>
       <Header title={(showDeleted ? 'Deleted ' : '') + 'Wallets'} trailing={(
-        <Icon
-          className='icon'
-          size={24}
-          icon={showDeleted ? 'eyeOff' : 'eye'}
-          onClick={() => setShowDeleted(!showDeleted)}
-        ></Icon>
+        <>
+          <div style={{ flex: 1 }}></div>
+          <Icon
+            className='icon'
+            size={24}
+            icon={showDeleted ? 'eyeOff' : 'eye'}
+            onClick={() => setShowDeleted(!showDeleted)}
+          ></Icon>
+        </>
       )}></Header>
 
-      <ListItem compact>
+      {/* <ListItem compact style={{ marginBottom: 25 }}>
         Search
-      </ListItem>
+      </ListItem> */}
 
-      <div style={{ paddingTop: 25 }}>
+      <div>
         {!showDeleted && (
           <ListItem compact className={walletListItemStyles.walletListItem}>
             <div style={{ textAlign: 'center' }}>Total</div>
             <div></div>
             <div>
-              {total === -1 ? '...' : <Currency currency='$'>{total}</Currency>}
+              {total === -1 ? '' : <Currency currency='$'>{total}</Currency>}
             </div>
             <Icon className={styles.small} icon="none"></Icon>
           </ListItem>

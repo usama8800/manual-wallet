@@ -15,7 +15,7 @@ export default function ListItem(props: {
 }) {
   const router = useRouter();
   const onClick = (e: MouseEvent<HTMLDivElement, any>) => {
-    if (props.link) router.replace(props.link);
+    if (props.link) router.push(props.link);
     if (props.onClick) props.onClick(e);
   };
 

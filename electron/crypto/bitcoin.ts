@@ -8,7 +8,7 @@ export function getRandomWallet() {
   const keyPair = ECPair.makeRandom();
   const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
   return {
-    address,
+    address: address!,
     privateKey: keyPair.privateKey!.toString('hex')
   };
 }

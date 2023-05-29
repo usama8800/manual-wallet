@@ -1,10 +1,12 @@
 import { CSSProperties } from 'react';
 
 export default function Icon(props: {
-  icon: keyof typeof svgs, size?: number,
+  icon?: keyof typeof svgs,
+  size?: number,
   className?: string, style?: CSSProperties,
   onClick?: () => void,
 }) {
+  const icon = props.icon ?? 'none';
   const size = props.size ?? 30;
   return (
     <div
@@ -14,18 +16,26 @@ export default function Icon(props: {
         height: size,
         ...(props.style ?? {}),
       }}
-      onClick={props.onClick}
-    >{svgs[props.icon as keyof typeof svgs]}</div>
+      onClick={(e) => {
+        if (props.onClick) {
+          e.stopPropagation();
+          props.onClick();
+        }
+      }}
+    >{svgs[icon]}</div>
   );
 }
 
 const svgs = {
+  back: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="48" d="M244 400L100 256l144-144M120 256h292" />
+  </svg>,
   menu: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
     <circle cx="256" cy="256" r="48" fill="currentColor" />
     <circle cx="256" cy="416" r="48" fill="currentColor" />
     <circle cx="256" cy="96" r="48" fill="currentColor" />
   </svg>,
-  undelete: <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" enable-background="new 0 0 52 52" xmlSpace="preserve">
+  undelete: <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" enableBackground="new 0 0 52 52" xmlSpace="preserve">
     <g fill='currentColor'>
       <path d="M41.5,20h-31C9.7,20,9,20.7,9,21.5V45c0,2.8,2.2,5,5,5h24c2.8,0,5-2.2,5-5V21.5C43,20.7,42.3,20,41.5,20z
     M26,46v-4c3.3,0,6-2.7,6-6s-2.7-6-6-6c-1.6,0-3.1,0.7-4.2,1.8c0.9,0.9,1.8,1.8,2.4,2.4c0.3,0.3,0.1,0.9-0.4,0.9h-7.3

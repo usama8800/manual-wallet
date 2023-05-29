@@ -47,14 +47,15 @@ export default function AddWallet() {
       networkSymbol: networks[networkSelectedIndex].symbol,
       address, privateKey, name,
       id: undefined as any,
+      deleted: undefined as any,
     });
     dispatch(fetchAllWallets());
-    router.replace('/wallets');
+    router.push('/wallets');
   }
 
   return (
     <div>
-      <Header title="Add Wallet"></Header>
+      <Header back='/wallets' title="Add Wallet"></Header>
 
       <Input
         value={name}

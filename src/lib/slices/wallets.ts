@@ -48,10 +48,13 @@ export const walletsSlice = createSlice({
         state.status = 'pending';
       })
       .addCase(fetchAllWallets.fulfilled, (state, action) => {
-        walletsAdapter.setAll(state, action.payload.map((wallet) => ({
-          ...defaultWallet,
-          ...wallet,
-        })));
+        walletsAdapter.upsertMany(state, action.payload.map(wallet => {
+          const prev = state.entities[wallet.id];
+          return {
+            ...(prev ? prev : defaultWallet),
+            ...wallet,
+          };
+        }));
         state.status = 'fulfilled';
       })
       .addCase(fetchAllWallets.rejected, (state, action) => {

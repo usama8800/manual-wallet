@@ -1,8 +1,11 @@
 import { PrismaClient } from '@prisma/client';
+import { getRandomWallet } from '../electron/crypto';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const x = getRandomWallet('eth');
+  console.log(x);
 }
 
 main()

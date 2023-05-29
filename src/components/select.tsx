@@ -8,7 +8,7 @@ export default function Select<T>(props: {
   selectedIndex: number, setSelectedIndex: (i: number) => void,
 }) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<any>(null);
+  const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     document.addEventListener('click', outsideClickHandler, true);
     return () => {

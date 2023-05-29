@@ -53,3 +53,7 @@ svg {
     color: rgb(var(--foreground-rgb));
   }
 }
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}

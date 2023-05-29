@@ -16,12 +16,12 @@ function invertObject(obj: { [key: string]: string }) {
 export type SliceStatus = 'idle' | 'pending' | 'rejected' | 'fulfilled';
 
 export function classNames(
-  definite?: (string | undefined)[],
-  indefinite?: { [key: string]: boolean | string | undefined },
+  array?: (string | undefined)[],
+  object?: { [key: string]: boolean | string | undefined },
   styles?: { [key: string]: string; },
 ) {
   return [
-    ...(definite?.filter(x => x) as string[] ?? []),
-    ...Object.entries(indefinite ?? {}).filter(([_, val]) => val).map(([key, _]) => key)
+    ...(array?.filter(x => x) as string[] ?? []),
+    ...Object.entries(object ?? {}).filter(([_, val]) => val).map(([key, _]) => key)
   ].map(x => styles ? styles[x] : x).join(' ');
 }

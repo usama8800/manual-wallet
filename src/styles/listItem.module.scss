@@ -9,6 +9,10 @@
   justify-content: space-between;
   height: 70px;
 
+  &.oppositeColors {
+    background-color: 'rgb(var(--background-rgb))';
+  }
+
   &.compact {
     height: 50px;
   }
@@ -16,5 +20,22 @@
   &.hoverable:hover {
     border: 1px solid #777 !important;
     cursor: pointer;
+  }
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  user-select: none;
+  margin-bottom: 0;
+
+  &.oppositeColors {
+    color: rgb(var(--foreground-2-rgb));
+    border: 1px solid #444;
+
+    &:hover {
+      color: rgb(var(--foreground-rgb));
+      border: 1px solid #777;
+    }
   }
 }

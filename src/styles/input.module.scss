@@ -45,3 +45,19 @@
     }
   }
 }
+
+.input.clear {
+  --background-2-rgb: var(--background-rgb);
+  margin: 0;
+
+  .main {
+    padding: 0;
+    margin: 0;
+    height: unset;
+
+    input {
+      margin: 0;
+      padding: 0;
+    }
+  }
+}

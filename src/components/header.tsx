@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
 
 export default function Header(props: {
-  title: string,
+  title?: string,
+  children?: ReactNode,
   trailing?: ReactNode | ReactNode[],
 }) {
   return (
@@ -12,10 +13,13 @@ export default function Header(props: {
       alignItems: 'center',
       userSelect: 'none',
     }}>
-      <span style={{
-        fontSize: '2rem',
-        fontWeight: 700,
-      }}>{props.title}</span>
+      {props.title && (
+        <span style={{
+          fontSize: '2rem',
+          fontWeight: 700,
+        }}>{props.title}</span>
+      )}
+      {props.children && (props.children)}
       {props.trailing && (props.trailing)}
     </div>
   );

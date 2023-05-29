@@ -2,10 +2,9 @@
   &>*:not(.small) {
     flex: 1;
   }
+}
 
-  .networkContainer {
-    display: flex;
-    flex-direction: row;
-  }
-
+.networkContainer {
+  display: flex;
+  flex-direction: row;
 }

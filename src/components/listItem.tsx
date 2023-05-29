@@ -10,6 +10,7 @@ export default function ListItem(props: {
   style?: CSSProperties,
   className?: string,
   link?: string,
+  oppositeColors?: boolean,
   onClick?: (event: MouseEvent<HTMLDivElement, any>) => void,
 }) {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function ListItem(props: {
       className={classNames([styles.listItem, props.className], {
         [styles.compact]: props.compact,
         [styles.hoverable]: props.hoverable,
+        [styles.oppositeColors]: props.oppositeColors,
       })}
       style={props.style}
       onClick={onClick}

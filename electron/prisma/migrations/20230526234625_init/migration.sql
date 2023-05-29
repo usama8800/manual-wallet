@@ -12,3 +12,5 @@ CREATE TABLE "Wallet" (
     "networkSymbol" TEXT NOT NULL,
     CONSTRAINT "Wallet_networkSymbol_fkey" FOREIGN KEY ("networkSymbol") REFERENCES "Network" ("symbol") ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+INSERT INTO "Network" ("symbol", "name") VALUES ('btc', 'Bitcoin'), ('eth', 'Ethereum');

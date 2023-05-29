@@ -14,6 +14,9 @@
     "lint": "npx eslint ./src ./electron --fix",
     "qwe": "nodemon --config nodemon.random.json"
   },
+  "prisma": {
+    "schema": "electron/prisma/schema.prisma"
+  },
   "dependencies": {
     "@prisma/client": "^4.14.1",
     "@reduxjs/toolkit": "^1.9.5",

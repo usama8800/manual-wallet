@@ -17,14 +17,14 @@ async function main() {
   async.auto({
     buildElectron: (cb: async.AsyncResultCallback<any, Error>) => {
       exec('npm run forge:package', (error) => {
-        console.log(error);
+        if (error) return cb(error);
         console.log('Built electron');
         cb();
       });
     },
     copyElectron: ['buildElectron', (_: any, cb: async.AsyncResultCallback<any, Error>) => {
       setImmediate(() => {
-        archive.directory('dist/electron', false);
+        archive.directory('dist/forge', false);
         cb();
       });
     }],

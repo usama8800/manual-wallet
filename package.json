@@ -1,10 +1,11 @@
 {
   "name": "manual-wallet",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
-  "main": "dist/electron/main.js",
+  "main": "dist/main.js",
   "scripts": {
     "dev": "concurrently \"npm run react:dev\" \"npm run electron:dev\"",
+    "build": "concurrently \"npm run forge:package\" \"npm run react:build\"",
     "react:dev": "next dev",
     "react:build": "next build",
     "react:start": "next start",
@@ -21,22 +22,17 @@
     "zip": "tsx scripts/zip.ts",
     "random": "nodemon --config nodemon.random.json"
   },
-  "prisma": {
-    "schema": "electron/prisma/schema.prisma"
-  },
   "dependencies": {
     "@prisma/client": "^4.14.1",
-    "bip32": "^4.0.0",
     "bitcoinjs-lib": "^6.1.1",
-    "crypto-js": "^4.1.1",
-    "dotenv": "^16.0.3",
     "ecpair": "^2.1.0",
-    "electron-squirrel-startup": "^1.0.0",
+    "tiny-secp256k1": "^2.2.1",
     "keccak": "^3.0.1",
     "randombytes": "^2.1.0",
     "secp256k1": "^5.0.0",
-    "serve": "^14.2.0",
-    "tiny-secp256k1": "^2.2.1"
+    "dotenv": "^16.0.3",
+    "electron-squirrel-startup": "^1.0.0",
+    "serve": "^14.2.0"
   },
   "devDependencies": {
     "async": "^3.2.4",
@@ -64,16 +60,15 @@
     "autoprefixer": "10.4.14",
     "concurrently": "^8.0.1",
     "electron": "^24.3.1",
-    "electron-reload": "^2.0.0-alpha.1",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
     "eslint-config-react-app": "^7.0.1",
     "fs-extra": "^11.1.1",
     "lodash": "^4.17.21",
+    "prisma": "^4.14.1",
     "next": "13.4.2",
     "nodemon": "^2.0.22",
     "postcss": "8.4.23",
-    "prisma": "^4.14.1",
     "qrcode": "^1.5.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",

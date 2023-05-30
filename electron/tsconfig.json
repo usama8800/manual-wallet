@@ -4,7 +4,7 @@
     "esModuleInterop": true,
     "noImplicitAny": true,
     "sourceMap": true,
-    "outDir": "../dist/electron",
+    "outDir": "../dist",
     "baseUrl": ".",
     "paths": {
       "*": [

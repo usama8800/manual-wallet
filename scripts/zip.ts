@@ -15,29 +15,23 @@ async function main() {
   archive.pipe(zip);
 
   async.auto({
-    buildElectron: (cb: async.AsyncResultCallback<any, Error>) => {
+    buildReact: (cb: async.AsyncResultCallback<any, Error>) => {
+      exec('npm run react:build', (error) => {
+        if (error) return cb(error);
+        console.log('Built react');
+        cb();
+      });
+    },
+    buildElectron: ['buildReact', (_: any, cb: async.AsyncResultCallback<any, Error>) => {
       exec('npm run forge:package', (error) => {
         if (error) return cb(error);
         console.log('Built electron');
         cb();
       });
-    },
+    }],
     copyElectron: ['buildElectron', (_: any, cb: async.AsyncResultCallback<any, Error>) => {
       setImmediate(() => {
         archive.directory('dist/forge', false);
-        cb();
-      });
-    }],
-    buildReact: (cb: async.AsyncResultCallback<any, Error>) => {
-      exec('npm run react:build', (error) => {
-        if (error) return cb(error);
-        console.log('Built React');
-        cb();
-      });
-    },
-    copyReact: ['buildReact', (_: any, cb: async.AsyncResultCallback<any, Error>) => {
-      setImmediate(() => {
-        archive.directory('dist/www', 'www');
         cb();
       });
     }],

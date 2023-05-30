@@ -3,6 +3,7 @@
 const fsP = require('fs/promises');
 const fsE = require('fs-extra');
 const path = require('path');
+const { writeFileSync } = require('fs');
 
 module.exports = {
   packagerConfig: {},
@@ -27,11 +28,26 @@ module.exports = {
   ],
   hooks: {
     prePackage: async () => {
-      await fsE.remove(path.resolve(__dirname, '../dist/electron'));
+      await fsE.remove(path.resolve(__dirname, 'dist/forge'));
     },
     postPackage: async (forgeConfig, options) => {
       const outputPath = options.outputPaths[0];
-      await fsP.cp(outputPath, path.resolve(__dirname, '../dist/electron'), { recursive: true });
+      const files = fs.readdirSync(directory);
+
+      // Exclude the specified file
+      const filteredFiles = files.filter(file => file !== excludedFile);
+
+      // Remove all files and folders in the directory
+      for (const file of filteredFiles) {
+        const filePath = path.join(directory, file);
+
+        if (fs.lstatSync(filePath).isDirectory()) {
+          fs.rmdirSync(filePath);
+        } else {
+          fs.unlinkSync(filePath);
+        }
+      }
+      await fsP.cp(outputPath, path.resolve(__dirname, 'dist/forge'), { recursive: true });
     }
   }
 };

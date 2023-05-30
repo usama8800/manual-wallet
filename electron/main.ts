@@ -50,7 +50,7 @@ function createWindow() {
   } else {
     server = createServer((request, response) => {
       return serveHandler(request, response, {
-        public: path.join(__dirname, '..', 'out'),
+        public: 'www',
       });
     });
     server.listen({ port: 0, host: 'localhost' }, () => {

@@ -32,19 +32,15 @@ module.exports = {
     },
     postPackage: async (forgeConfig, options) => {
       const outputPath = options.outputPaths[0];
-      const files = fs.readdirSync(directory);
-
-      // Exclude the specified file
-      const filteredFiles = files.filter(file => file !== excludedFile);
-
-      // Remove all files and folders in the directory
-      for (const file of filteredFiles) {
-        const filePath = path.join(directory, file);
-
-        if (fs.lstatSync(filePath).isDirectory()) {
-          fs.rmdirSync(filePath);
+      const directory = path.resolve(outputPath, 'resources');
+      const files = await fsP.readdir(directory);
+      for (const file of files) {
+        if (file === 'dist') {
+          await fsE.remove(path.join(directory, file, 'forge'));
+          await fsE.remove(path.join(directory, file, 'www'));
         } else {
-          fs.unlinkSync(filePath);
+          const filePath = path.join(directory, file);
+          await fsE.remove(filePath);
         }
       }
       await fsP.cp(outputPath, path.resolve(__dirname, 'dist/forge'), { recursive: true });

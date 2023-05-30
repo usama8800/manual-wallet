@@ -1,8 +1,10 @@
 import { PrismaClient, Wallet } from '@prisma/client';
 import * as dotenv from 'dotenv';
 import { BrowserWindow, app, ipcMain } from 'electron';
+import { Server, createServer } from 'http';
+import { AddressInfo } from 'net';
 import * as path from 'path';
-import * as url from 'url';
+import serveHandler from 'serve-handler';
 import { getRandomWallet } from './crypto';
 
 dotenv.config();
@@ -42,23 +44,25 @@ function createWindow() {
     mainWindow?.webContents.goBack();
   });
 
-  console.log(process.env.MODE);
+  let server: Server;
   if (process.env.MODE === 'dev') {
     mainWindow.loadURL('http://localhost:3000');
   } else {
-    mainWindow.loadURL(
-      url.format({
-        pathname: path.join(__dirname, '..', 'out', '/index.html'),
-        protocol: 'file:',
-        slashes: true
-      })
-    );
-    mainWindow.loadURL('http://localhost:3000');
+    server = createServer((request, response) => {
+      return serveHandler(request, response, {
+        public: path.join(__dirname, '..', 'out'),
+      });
+    });
+    server.listen({ port: 0, host: 'localhost' }, () => {
+      const address = server.address() as AddressInfo;
+      mainWindow?.loadURL('http://localhost:' + address.port);
+    });
   }
 
   mainWindow.on('closed', () => {
     mainWindow = null;
     prisma.$disconnect();
+    if (server) server.close();
   });
 }
 

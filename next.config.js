@@ -11,6 +11,7 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'export',
+  distDir: 'dist/www',
 };
 
 module.exports = nextConfig;

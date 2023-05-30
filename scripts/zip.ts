@@ -1,7 +1,7 @@
 import archiver from 'archiver';
+import async from 'async';
 import { exec } from 'child_process';
 import fs from 'fs-extra';
-import { resolve } from 'path';
 import packageJson from '../package.json';
 
 const zipFileName = `${packageJson.name}-${packageJson.version}.zip`;
@@ -14,49 +14,35 @@ async function main() {
   const archive = archiver('zip', { zlib: { level: 9 } });
   archive.pipe(zip);
 
-  archive.file('package.json', { name: 'user/mods/EntryPointSelector/package.json' });
-  archive.file('LICENSE', { name: 'user/mods/EntryPointSelector/LICENSE' });
-  archive.file('README.md', { name: 'user/mods/EntryPointSelector/README.md' });
-  archive.directory('data', 'user/mods/EntryPointSelector/data');
-
   async.auto({
-    buildMod: (cb: async.AsyncResultCallback<any, Error>) => {
-      exec('npm run build', () => {
-        console.log('Built mod');
-        cb();
-      });
-    },
-    copyMod: ['buildMod', (_: any, cb: async.AsyncResultCallback<any, Error>) => {
-      setImmediate(() => {
-        archive.directory('dist/src', 'user/mods/EntryPointSelector/src');
-        cb();
-      });
-    }],
     buildElectron: (cb: async.AsyncResultCallback<any, Error>) => {
-      exec('npm run package', { cwd: 'electron' }, () => {
+      exec('npm run forge:package', (error) => {
+        console.log(error);
         console.log('Built electron');
         cb();
       });
     },
     copyElectron: ['buildElectron', (_: any, cb: async.AsyncResultCallback<any, Error>) => {
       setImmediate(() => {
-        archive.directory('client', 'user/mods/EntryPointSelector/client');
+        archive.directory('dist/electron', false);
         cb();
       });
     }],
-    buildBepInEx: (cb: async.AsyncResultCallback<any, Error>) => {
-      exec('dotnet build', { cwd: 'BepInEx' }, () => {
-        console.log('Built BepInEx');
+    buildReact: (cb: async.AsyncResultCallback<any, Error>) => {
+      exec('npm run react:build', (error) => {
+        if (error) return cb(error);
+        console.log('Built React');
         cb();
       });
     },
-    copyBepInEx: ['buildBepInEx', (_: any, cb: async.AsyncResultCallback<any, Error>) => {
+    copyReact: ['buildReact', (_: any, cb: async.AsyncResultCallback<any, Error>) => {
       setImmediate(() => {
-        archive.file(resolve('BepInEx', 'obj', 'Debug', 'net472', 'EntryPointSelector.dll'), { name: 'BepInEx/plugins/EntryPointSelector.dll' });
+        archive.directory('dist/www', 'www');
         cb();
       });
     }],
-  }, async () => {
+  }, async (err) => {
+    if (err) return console.log(err);
     await archive.finalize();
   });
 }
